@@ -48,6 +48,9 @@ Input Variables
 - `azs` - The list of AZs - comma separated list
 - `subnet_azs` - The VPC subnet IDs - comma separated list
   - subnets must match the Availability Zones in var.azs
+- `tag1_key`   - key for the tag (defaults to empty string - no tag)
+- `tag1_value` - value for the tag (default to empty string - no value)
+- `tag1_propagate` - propagate tag to the instance (default - false)
 
 Outputs
 -------

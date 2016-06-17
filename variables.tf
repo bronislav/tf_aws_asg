@@ -74,3 +74,23 @@ variable "azs" {
   description = "Availability Zones"
   // comma separated list
 }
+
+variable "tag1_key" { default = "" }
+variable "tag1_value" { default = "" }
+variable "tag1_propagate" { default = false }
+
+variable "tag2_key" { default = "" }
+variable "tag2_value" { default = "" }
+variable "tag2_propagate" { default = false }
+
+variable "tag3_key" { default = "" }
+variable "tag3_value" { default = "" }
+variable "tag3_propagate" { default = false }
+
+variable "tag4_key" { default = "" }
+variable "tag4_value" { default = "" }
+variable "tag4_propagate" { default = false }
+
+variable "tag5_key" { default = "" }
+variable "tag5_value" { default = "" }
+variable "tag5_propagate" { default = false }

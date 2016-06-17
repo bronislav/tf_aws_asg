@@ -51,4 +51,34 @@ resource "aws_autoscaling_group" "main_asg" {
 
   health_check_grace_period = "${var.health_check_grace_period}"
   health_check_type         = "${var.health_check_type}"
+
+  tag {
+    key                 = "${var.tag1_key}"
+    value               = "${var.tag1_value}"
+    propagate_at_launch = "${var.tag1_propagate}"
+  }
+
+  tag {
+    key                 = "${var.tag2_key}"
+    value               = "${var.tag2_value}"
+    propagate_at_launch = "${var.tag2_propagate}"
+  }
+
+  tag {
+    key                 = "${var.tag3_key}"
+    value               = "${var.tag3_value}"
+    propagate_at_launch = "${var.tag3_propagate}"
+  }
+
+  tag {
+    key                 = "${var.tag4_key}"
+    value               = "${var.tag4_value}"
+    propagate_at_launch = "${var.tag4_propagate}"
+  }
+
+  tag {
+    key                 = "${var.tag5_key}"
+    value               = "${var.tag5_value}"
+    propagate_at_launch = "${var.tag5_propagate}"
+  }
 }
