@@ -8,21 +8,26 @@
 // - It's meant to be used for ASGs that *don't*
 //   need an ELB associated with them.
 
-// Provider specific configs
-provider "aws" {
-    access_key = "${var.aws_access_key}"
-    secret_key = "${var.aws_secret_key}"
-    region = "${var.aws_region}"
-}
-
 resource "aws_launch_configuration" "launch_config" {
-    name = "${var.lc_name}"
-    image_id = "${var.ami_id}"
-    instance_type = "${var.instance_type}"
-    iam_instance_profile = "${var.iam_instance_profile}"
-    key_name = "${var.key_name}"
-    security_groups = ["${var.security_group}"]
-    user_data = "${file(var.user_data)}"
+  name_prefix          = "${var.lc_name_prefix}"
+  image_id             = "${var.ami_id}"
+  instance_type        = "${var.instance_type}"
+  iam_instance_profile = "${var.iam_instance_profile}"
+  key_name             = "${var.key_name}"
+  security_groups      = ["${var.security_group}"]
+  user_data            = "${file(var.user_data_path)}"
+
+  associate_public_ip_address = "${var.associate_public_ip_address}"
+  enable_monitoring           = "${var.enable_monitoring}"
+
+  root_block_device {
+    volume_type = "${var.root_volume_type}"
+    volume_size = "${var.root_volume_size}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "main_asg" {
@@ -40,9 +45,10 @@ resource "aws_autoscaling_group" "main_asg" {
   // Uses the ID from the launch config created above
   launch_configuration = "${aws_launch_configuration.launch_config.id}"
 
-  max_size = "${var.asg_number_of_instances}"
-  min_size = "${var.asg_minimum_number_of_instances}"
+  max_size         = "${var.asg_maximum_number_of_instances}"
+  min_size         = "${var.asg_minimum_number_of_instances}"
   desired_capacity = "${var.asg_number_of_instances}"
+
   health_check_grace_period = "${var.health_check_grace_period}"
-  health_check_type = "${var.health_check_type}"
+  health_check_type         = "${var.health_check_type}"
 }

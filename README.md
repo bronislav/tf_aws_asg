@@ -13,7 +13,8 @@ This module makes the following assumptions:
 Input Variables
 ---------------
 
-- `lc_name` - The launch configuration name
+- `lc_name_prefix` - The launch configuration name prefix (terraform will
+   generate name using this prefix)
 - `ami_id`
 - `instance_type`
 - `iam_instance_profile` - The ARN of the Instance Profile the LC should
@@ -26,12 +27,11 @@ Input Variables
       same template as this module, e.g. "${module.sg_web.security_group_id_web}"
     - It needs to be customized based on the name of your module resource.
    should use.
-- `user_data` - The path to the user_data file for the Launch Configuration.
+- `user_data_path` - The path to the user_data file for the Launch Configuration.
     - Terraform will include the contents of this file in the Launch Configuration.
 - `asg_name` - The Auto-Scaling group name.
 - `asg_number_of_instances` - The number of instances we want in the ASG
     - This is used to populate the following ASG settings.
-    - max_size
     - desired_capacity
 - `asg_minimum_number_of_instances` - The minimum number of instances
    the ASG should maintain.
@@ -39,14 +39,15 @@ Input Variables
     - It defaults to 1
     - You can set it to 0 if you want the ASG to do nothing when an
       instances fails
+- `asg_maximum_number_of_instances` - The maximum number of instances
+   the ASG should maintain
 - `health_check_grace_period` - Number of seconds for the health check
    time out. Defaults to 300.
 - `health_check_type` - The health check type. Options are `ELB` and
    `EC2`. It defaults to `EC2` in this module.
 - `azs` - The list of AZs - comma separated list
 - `subnet_azs` - The VPC subnet IDs - comma separated list
-  - Subnets must match the Availability Zones in var.azs
-
+  - subnets must match the Availability Zones in var.azs
 
 Outputs
 -------
@@ -64,7 +65,7 @@ You can use these in your terraform template with the following steps.
 ```
 module "my_autoscaling_group" {
   source               = "github.com/terraform-community-modules/tf_aws_asg"
-  lc_name              = "${var.lc_name}"
+  lc_name_prefix       = "${var.lc_name_prefix}"
   ami_id               = "${var.ami_id}"
   instance_type        = "${var.instance_type}"
   iam_instance_profile = "${var.iam_instance_profile}"
@@ -81,22 +82,15 @@ module "my_autoscaling_group" {
 
   // The health_check_type can be EC2 or ELB and defaults to EC2
   health_check_type = "${var.health_check_type}"
-  
+
   azs        = "${var.azs}"
   subnet_azs = "${var.subnet_azs}"
-
-  aws_access_key = "${var.aws_access_key}"
-  aws_secret_key = "${var.aws_secret_key}"
-  aws_region     = "${var.aws_region}"
 }
 ```
 
 2.) Setting values for the following variables, either through `terraform.tfvars` or `-var` arguments on the CLI
 
-- aws_access_key
-- aws_secret_key
-- aws_region
-- lc_name
+- lc_name_prefix
 - ami_id
 - instance_type
 - iam_instance_profile
@@ -104,7 +98,7 @@ module "my_autoscaling_group" {
 - security_group
 - user_data
 - asg_name
-- asg_number_of_instances.
+- asg_number_of_instances
 - azs
 - subnet_azs
 
